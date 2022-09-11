@@ -8,8 +8,14 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Startup Name Generator',
+      theme: ThemeData(          // Add the 5 lines from here...
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.yellow,
+          foregroundColor: Colors.black,
+        ),
+      ),
       debugShowCheckedModeBanner: false,
       home: RandomWords(),
     );
