@@ -10,14 +10,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Startup Name Generator',
-      theme: ThemeData(          // Add the 5 lines from here...
+      theme: ThemeData(
+        // Add the 5 lines from here...
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.yellow,
           foregroundColor: Colors.black,
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: RandomWords(),
+      home: const RandomWords(),
     );
   }
 }
@@ -30,7 +31,7 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
-  final List<WordPair>_suggestions = <WordPair>[];
+  final List<WordPair> _suggestions = <WordPair>[];
   final Set<WordPair> _saved = <WordPair>{};
   final TextStyle _biggerFont = const TextStyle(fontSize: 18);
 
@@ -88,27 +89,25 @@ class _RandomWordsState extends State<RandomWords> {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) {
-          final Iterable<ListTile> tiles = _saved.map((pair) {
-            return ListTile(
-              title: Text(
-                pair.asPascalCase,
-                style: _biggerFont,
-              ),
-            );
-          },
+          List<Widget> tileList = <Widget>[];
+          for (WordPair pair in _saved) {
+            ListTile oneTile =
+                ListTile(title: Text(pair.asPascalCase, style: _biggerFont));
+            tileList.add(oneTile);
+          }
+
+          ListView divided = ListView(
+              children: ListTile.divideTiles(
+                  context: context,
+                  tiles: tileList
+              ).toList()
           );
-          final List<Widget> divided = tiles.isNotEmpty ?
-            ListTile.divideTiles(
-              context: context,
-              tiles: tiles,
-            ).toList()
-              : <Widget>[];
 
           return Scaffold(
             appBar: AppBar(
               title: const Text('Saved Suggestions'),
             ),
-            body: ListView(children: divided),
+            body: divided,
           );
         },
       ),
